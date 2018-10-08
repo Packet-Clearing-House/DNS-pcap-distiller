@@ -10,17 +10,20 @@ else
     echo "I will now send endless queries to $DNS_IP until you stop me!"
     echo ""
     declare -a ZONES=("pch.net" "www.pch.net" "lg.pch.net" "prefix.pch.net" "com")
-    declare -a TYPES=("A" "AAAA" "TXT")
-    declare -a PROTOS=("" "+tcp") # default is udp so empty string means UDP
+    TYPES[0]="A"
+    TYPES[1]="AAAA"
+    TYPES[2]="TXT"
+    PROTOS[0]="" # default is udp so empty string means UDP
+    PROTOS[1]="+tcp"
     while true; do
             sleep 1.01 & # change this to be less or more to go slower or faster
             for ZONE in "${ZONES[@]}"
             do
-                # todo - first type and first proto are selected
-                TYPE=${TYPES[$RANDOM % ${#RANDOM[*]}]}
-                PROTO=${PROTOS[$RANDOM % ${#RANDOM[*]}]}
+                index=$[$RANDOM % ${#TYPES[@]}]
+                TYPE=${TYPE[$index]}
+                index=$[$RANDOM % ${#PROTOS[@]}]
+                PROTO=${PROTOS[$index]}
                 `/usr/bin/dig ${PROTO} @${DNS_IP} ${TYPE} ${ZONE} +short > out.log 2> /dev/null`
-    #           echo "dig ${PROTO} @${DNS_IP} ${TYPE} ${ZONE} +short" # debug
             done
             wait # for sleep
     done

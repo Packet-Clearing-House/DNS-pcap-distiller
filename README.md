@@ -39,7 +39,7 @@ IPV4_ADDRESS=$my_ip
 QUERY_LOGGING=false
 EOF
 ./pi-hole-basic-install.sh --unattended
-echo "on another machine, run:     lotsOfDnsQueries.sh $my_ip"
+echo "on another machine, run:     ./lotsOfDnsQueries.sh $my_ip"
 ```
 
 If you need to see queries and responses in real time to debug, us this ``tcpdump`` command, replacing 9.9.9.9 with your upstream recursive resolver:
