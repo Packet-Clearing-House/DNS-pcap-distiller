@@ -23,7 +23,14 @@ ifeq ($(PLATFORM), Darwin)
     SUFFIX = .jnilib
 ```
 
-### Quick Start
+### Installation
+
+This is a draft, but roughly:
+
+1. Install prerequisites per above
+1. Clone this repo ``git clone https://github.com/Packet-Clearing-House/DNS-pcap-distiller``
+1. Edit your config file ``file_name_tbd``
+1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-0.0.1-SNAPSHOT.jar``
 
 
 ## Development
