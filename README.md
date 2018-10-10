@@ -34,7 +34,11 @@ The maven build file assumes that the Jpcap repository has been cloned into a si
 
 ### Ubuntu Dev Quick Start
 
-We test using Ubuntu 16.04, an endless loop bash script to simulate client DNS queries and an instance of [Pi-Hole](https://pi-hole.net/) to receive and respond to queries. To bootstrap your dev environment you can run ``./ubuntu16DevProvision.sh`` in the root of this directory.
+We test using Ubuntu 16.04, an endless loop bash script to simulate client DNS queries and an instance of [Pi-Hole](https://pi-hole.net/) to receive and respond to queries. To bootstrap your dev environment you can run:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/WEB-1158/dev/ubuntu16DevProvision.sh | bash
+```
 
 If you need to see queries and responses in real time to debug, us this ``tcpdump`` command:
 
