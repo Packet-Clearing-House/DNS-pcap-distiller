@@ -47,6 +47,22 @@ We test using Ubuntu 16.04, an endless loop bash script to simulate client DNS q
 curl -sSL https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/WEB-1158/dev/ubuntu16DevProvision.sh | bash
 ```
 
+If you want to inspect the contents of this bash script, feel free to manually copy it [from here](https://github.com/Packet-Clearing-House/DNS-pcap-distiller/blob/WEB-1158/dev/ubuntu16DevProvision.sh) and review before running it.
+
+The script allows you to send ~5 queries/second by default. Assuming your name server is 192.168.1.1, that'd look like this:
+
+```bash
+./ubuntu16DevProvision.sh 192.168.1.1
+```
+
+There's a sleep and multiplier option too.  Sleep defaults to 1.0 seconds and the multiplier defaults to 1x. Here's two other examples:
+
+```bash
+./lotsOfDnsQueries.sh 192.168.1.1 0.5   #  0.5 sleep, 1x multiplier 
+
+./lotsOfDnsQueries.sh 192.168.1.1 0 100 #  0 sleep, 100x multiplier
+```
+
 If you need to see queries and responses in real time to debug, us this ``tcpdump`` command:
 
 ```
