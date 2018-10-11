@@ -29,7 +29,7 @@ else
     echo ""
     echo "I will now send endless queries to $DNS_IP until you stop me!"
     echo ""
-    declare -a ZONES=("pch.net" "www.pch.net" "lg.pch.net" "prefix.pch.net" "quad9.net" "www.quad9.net")
+    declare -a ZONES=("pch.net" "www.pch.net" "lg.pch.net" "prefix.pch.net" "quad9.net" "www.quad9.net" "net" "kwyjibo.pch.net")
     TYPES[0]="A"
     TYPES[1]="AAAA"
     TYPES[2]="TXT"
