@@ -1,0 +1,26 @@
+# Configuration for the DNS pcap distiller
+# Refer to the README for information on setting specific values
+
+# Set the interface on which to capture packets. Currently only named interfaces work, "any" meta interface does not
+distiller:
+  interface: en0
+# Set the snapshot length (the number of bytes captured for each packet)
+# See https://wiki.wireshark.org/SnapLen for more information
+#
+  snaplen: 65535
+# Whether the app should bind in promiscuous mode.
+#
+  promiscuous: true
+
+# configure logging
+logging:
+  level:
+    root: WARN
+    org:
+      springframework:
+        security: DEBUG
+        web: ERROR
+      hibernate: DEBUG
+      apache:
+        commons:
+          dbcp2: DEBUG
