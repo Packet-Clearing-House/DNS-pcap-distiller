@@ -1,19 +1,33 @@
 # Configuration for the DNS pcap distiller
-# Refer to the README for information on setting specific values
+# Refer to the README for information on setting specific values:
+# https://github.com/Packet-Clearing-House/DNS-pcap-distiller/
 
-# Set the interface on which to capture packets. Currently only named interfaces work, "any" meta interface does not
 distiller:
-  interface: en0
-# Set the snapshot length (the number of bytes captured for each packet)
-# See https://wiki.wireshark.org/SnapLen for more information
-#
-  snaplen: 65535
-# Whether the app should bind in promiscuous mode.
-#
-  promiscuous: true
 
-# configure logging
+  # Set the interface on which to capture packets. Currently only named interfaces work, "any" meta interface does not
+  interface: en0
+  # Set the snapshot length (the number of bytes captured for each packet)
+  # See https://wiki.wireshark.org/SnapLen for more information
+  snaplen: 65535
+  # Whether the app should bind in promiscuous mode to the interface when capturing packets
+  promiscuous: true
+  # directories distiller will use
+  directory:
+    # temp - where the app stores log files as they're being written
+    - temp: /tmp/dns-pcap-distiller
+    # data - where the app writes the final log file after it's done writing to it
+    - data: /opt/dns-pcap-distiller
+  # if you need to ignore traffic to a series of IPs on the destination or source of traffic, list them there
+  ignoreIps:
+    destination:
+      - 192.168.1.1
+    source:
+      - 192.168.1.1
+
+# configure logging - based on spring boot defaults:
+# https://www.concretepage.com/spring-boot/spring-boot-logging-example
 logging:
+  path: /var/log/dns-pcap-distiller.log
   level:
     root: WARN
     org:
@@ -21,6 +35,5 @@ logging:
         security: DEBUG
         web: ERROR
       hibernate: DEBUG
-      apache:
-        commons:
-          dbcp2: DEBUG
+      distiller:
+        pcap: DEBUG
