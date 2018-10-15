@@ -14,15 +14,21 @@ distiller:
   # directories distiller will use
   directory:
     # temp - where the app stores log files as they're being written
-    - temp: /tmp/dns-pcap-distiller
+    temp: /tmp/dns-pcap-distiller
     # data - where the app writes the final log file after it's done writing to it
-    - data: /opt/dns-pcap-distiller
+    data: /opt/dns-pcap-distiller
   # if you need to ignore traffic to a series of IPs on the destination or source of traffic, list them there
+  # todo - these are not implemented yet
   ignoreIps:
     destination:
       - 192.168.1.1
     source:
       - 192.168.1.1
+  queue:
+    # how long should the distiller loop for in milliseconds
+    timer: 1000
+    # maximum amount of packets to have in the queue before ignoring new packets (dropping them)
+    maxSize: 20000
 
 # configure logging - based on spring boot defaults:
 # https://www.concretepage.com/spring-boot/spring-boot-logging-example
