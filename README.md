@@ -1,6 +1,6 @@
 # DNS-pcap-distiller
 
-DNS pcap distiller java application to grab DNS packets and write them to a gzip file in the [DNSAuth log format](https://github.com/Packet-Clearing-House/DNSAuth#logs). 
+DNS pcap distiller (DPD) java application to grab DNS packets and write them to a gzip file in the [DNSAuth log format](https://github.com/Packet-Clearing-House/DNSAuth#logs). 
 
 ## Installation and Running
 
@@ -23,14 +23,24 @@ ifeq ($(PLATFORM), Darwin)
     SUFFIX = .jnilib
 ```
 
-### Installation
+### Installation 
 
-This is a draft, but roughly:
+todo - remove branch from application.yml
+
+#### Via Compiling
 
 1. Install prerequisites per above
 1. Clone this repo ``git clone https://github.com/Packet-Clearing-House/DNS-pcap-distiller``
-1. Edit your config file ``file_name_tbd``
-1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-0.0.1-SNAPSHOT.jar``
+1. Compile the ``.jar`` from the ``.java`` files in ``./src`` 
+1. Edit your config file ``./src/resources/application.yml``
+1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-VERSION_HERE.jar``
+
+#### Via downoading pre-compiled .jar
+
+1. Install prerequisites per above
+1. Go to [the DPD website](https://pch.net/dpd) and download the latest version
+1. Download the config file [https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/WEB-1158/src/main/resources/application.yml](from github) and edit it to your match your environment
+1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-VERSION_HERE.jar``
 
 
 ## Development
