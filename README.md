@@ -1,6 +1,6 @@
 # DNS-pcap-distiller
 
-DNS pcap distiller (DPD) java application to grab DNS packets and write them to a gzip file in the [DNSAuth log format](https://github.com/Packet-Clearing-House/DNSAuth#logs). 
+DNS pcap distiller (DPD) java application to grab DNS packets and write them to a file in the [DNSAuth log format](https://github.com/Packet-Clearing-House/DNSAuth#logs). 
 
 ## Installation and Running
 
@@ -40,6 +40,7 @@ Note that the maven build file assumes that the Jpcap repository has been cloned
 1. Download the config file [https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/master/src/main/resources/application.yml](from github) and edit it to your match your environment
 1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-1.0.0.jar``
 
+Note - You will need to gzip and send these files to your [DNSAuth](https://github.com/Packet-Clearing-House/DNSAuth) instance.
 
 ## Development
 
