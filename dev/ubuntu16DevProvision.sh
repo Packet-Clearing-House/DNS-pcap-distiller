@@ -5,7 +5,6 @@ apt-get upgrade -y
 apt-get install -y openjdk-8-jdk-headless unzip zip git
 git clone https://github.com/Packet-Clearing-House/DNS-pcap-distiller.git
 cd DNS-pcap-distiller
-git checkout WEB-1158
 cd dev
 unzip jplibpcap.so.zip
 mv libjpcap.so /usr/lib/

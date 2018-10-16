@@ -39,7 +39,7 @@ todo - remove branch from application.yml
 
 1. Install prerequisites per above
 1. Go to [the DPD website](https://pch.net/dpd) and download the latest version
-1. Download the config file [https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/WEB-1158/src/main/resources/application.yml](from github) and edit it to your match your environment
+1. Download the config file [https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/master/src/main/resources/application.yml](from github) and edit it to your match your environment
 1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-VERSION_HERE.jar``
 
 
@@ -54,10 +54,10 @@ The maven build file assumes that the Jpcap repository has been cloned into a si
 We test using Ubuntu 16.04, an endless loop bash script to simulate client DNS queries and an instance of [Pi-Hole](https://pi-hole.net/) to receive and respond to queries. To bootstrap your dev environment you can run:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/WEB-1158/dev/ubuntu16DevProvision.sh | bash
+curl -sSL https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/master/dev/ubuntu16DevProvision.sh | bash
 ```
 
-If you want to inspect the contents of this bash script, feel free to manually copy it [from here](https://github.com/Packet-Clearing-House/DNS-pcap-distiller/blob/WEB-1158/dev/ubuntu16DevProvision.sh) and review before running it.
+If you want to inspect the contents of this bash script, feel free to manually copy it [from here](https://github.com/Packet-Clearing-House/DNS-pcap-distiller/blob/master/dev/ubuntu16DevProvision.sh) and review before running it.
 
 The script allows you to send ~5 queries/second by default. Assuming your name server is 192.168.1.1, that'd look like this:
 
