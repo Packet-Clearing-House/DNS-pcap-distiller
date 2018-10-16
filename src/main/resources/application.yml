@@ -1,0 +1,39 @@
+# Configuration for the DNS pcap distiller
+# Refer to the README for information on setting specific values:
+# https://github.com/Packet-Clearing-House/DNS-pcap-distiller/
+
+distiller:
+
+  # Set the interface on which to capture packets. Currently only named interfaces work, "any" meta interface does not
+  intf: eth0
+
+  # Set the snapshot length (the number of bytes captured for each packet)
+  # Change this value at your own risk
+  # See https://wiki.wireshark.org/SnapLen for more information
+  snaplen: 65535
+
+  # Whether the app should bind in promiscuous mode to the interface when capturing packets
+  promiscuous: true
+
+  # directories distiller will use
+  # The directories must exist (they will not be created by the app)
+  directory:
+    # temp - where the app stores log files as they're being written
+    temp: /tmp/dns-pcap-distiller
+
+    # data - where the app writes the final distilled pcap file after it's done writing to it
+    data: /opt/dns-pcap-distiller
+
+  queue:
+    # maximum amount of packets to have in the queue before ignoring new packets (dropping them)
+    maxSize: 20000
+
+# configure logging - based on spring boot defaults:
+# https://www.concretepage.com/spring-boot/spring-boot-logging-example
+logging:
+  path: /var/log
+  level:
+    root: WARN
+    net:
+      pch:
+        dns: INFO
