@@ -1,83 +1,87 @@
 package net.pch.dns.pcap.distiller;
 
-import jpcap.JpcapCaptor;
-import jpcap.packet.IPPacket;
 import jpcap.packet.Packet;
-import jpcap.packet.TCPPacket;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.xbill.DNS.*;
 
-import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.Base64;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.concurrent.BlockingQueue;
 
 @SpringBootApplication
-public class Application {
+public class Application implements ApplicationRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
-    public Application(CaptureConfiguration captureConfiguration) throws Exception {
+    @Autowired
+    private Collector collector;
 
-        JpcapCaptor captor = captureConfiguration.getCaptor();
+    @Autowired
+    private DirectoryProperties props;
 
-        // set filters
-        // this should move behind a configuration
-        captor.setFilter("port 53", true);
+    @Autowired
+    private BlockingQueue<Packet> queue;
 
-        PrintStream o = System.out;
+    @Override
+    public void run(ApplicationArguments args) {
 
-        int forever = -1;
-        captor.loopPacket(forever, (Packet packet) -> {
-            byte[] data = null;
-            try {
-                data = packet.data;
+        // start the collector
+        new Thread(collector, "Collector").start();
+        boolean shutdown = false;
 
-                // We're seeing TCP SYNs, ACKs, and FINs.
-                // They're packets matching our filter.
-                // Discard non-DNS data
-                if (data.length < 10)
-                    return;
+        int queueTotal = 0;
+        int queueCount = 0;
+        int avgQueueSize = 0;
 
-                int proto = 0;
-                if (packet instanceof TCPPacket) {
-                    // the first two bytes are the length field
-                    // we could use this to figure out if the message is fragmented
-                    // TODO: investigate performance by replacing with wrapped ByteBuf for DNSInput
-                    data = Arrays.copyOfRange(data, 2, data.length);
-                    proto = 1;
-                }
+        String hostname = "";
+        try {
+            hostname = InetAddress.getLocalHost().getHostName();
+            hostname = hostname.substring(0, hostname.indexOf("."));
+        } catch (UnknownHostException e1) {
+            e1.printStackTrace();
+            return;
+        }
 
-                Message message = new Message(data);
-                Header header = message.getHeader();
-                int opCode = header.getOpcode();
-                String srcIp = ((IPPacket) packet).src_ip.getHostAddress();
-                String dstIp = ((IPPacket) packet).dst_ip.getHostAddress();
+        while (!shutdown) {
+             Processor processor = new Processor(queue, props, hostname);
+             Thread t = new Thread(processor, "Processor");
+             t.start();
 
-                Record[] records = message.getSectionArray(Section.QUESTION);
-                if (records.length > 0) {
-                    String zoneName = records[0].getName().toString().toLowerCase();
-                    int type = records[0].getType();
-                    if (header.getFlag(Flags.QR) == false) {
-                        o.format("Q %s %s %d %d %d %s %d\n", srcIp, dstIp, proto, opCode, type, zoneName, data.length);
-                    } else {    // if response grab response code and reverse src/dst IPs
-                        int rCode = header.getRcode();
-                        o.format("R %s %s %d %d %d %s %d %d\n", dstIp, srcIp, proto, opCode, type, zoneName, data.length, rCode);
+                long t0 = System.currentTimeMillis();
+                long t1 = t0 + (60 * 1000);
+
+                // gather stats
+                do {
+                    try {
+                        Thread.sleep(10 * 1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                }
-            } catch (WireParseException ex) {
-                if (ex.getMessage().contains("compression")) {
-                    ex.printStackTrace(System.err);
-                    System.err.println(new String(Base64.getEncoder().encode(data)));
-                }
-            } catch (Throwable e) {
-                System.err.println("exceptions!" + e);
-            }
-        });
 
-        captor.close();
+                    int size = queue.size();
+                    queueTotal += size; // this could overflow given specific configurations
+                    queueCount++;
+
+                } while (System.currentTimeMillis() < t1 && !shutdown);
+
+                int interval = (int) ((System.currentTimeMillis() - t0) / 1000);
+                if (queueTotal > 0) {
+                    avgQueueSize = queueTotal / queueCount;
+                } else {
+                    avgQueueSize = 0;
+                }
+                processor.setDone(interval, queueTotal, avgQueueSize);
+                try {
+                    t.join(2 * 60 * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+        }
     }
 
 }

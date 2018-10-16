@@ -2,35 +2,36 @@ package net.pch.dns.pcap.distiller;
 
 import jpcap.JpcapCaptor;
 import jpcap.NetworkInterface;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 
-@Configuration
-public class CaptureConfiguration {
+@Data
+@Component
+@ConfigurationProperties(prefix = "distiller")
+public class CaptorFactory {
 
-    @Value("${distiller.interface}")
-    public String intf = "en0";
+    // the interface to liston on
+    private String intf;
 
-    @Value("${distiller.snaplen}")
-    public Integer snaplen = 65535;
+    // the snapshot length
+    private Integer snaplen;
 
-    @Value("${distiller.promiscuous}")
-    public Boolean promiscuous = true;
+    // true if the captor should bind in promiscuous mode
+    private Boolean promiscuous;
 
     /**
-     * Returns true if this application can link to the libjpcap library.
-     * A return value of false suggests that the libjpcap shared library is not accessible to the JVM.
+     * Confirms that the libjpcap shared library is accessible to the JVM and the configured interface exists.
      * Refer to the README for information on the installation the libjpcap library.
      */
-    public boolean canResolveLibrary() {
-        try {
-            JpcapCaptor.getDeviceList();
-        } catch (UnsatisfiedLinkError e) {
-            return false;
+    @PostConstruct
+    public void verifyInterfaceConfiguration () {
+        if (getNetworkInterface() == null) {
+            throw new RuntimeException(String.format("no interface %s", intf));
         }
-        return true;
     }
 
     /**
@@ -50,7 +51,7 @@ public class CaptureConfiguration {
     /**
      * Returns a captor for the given configuration.
      */
-    public JpcapCaptor getCaptor() throws IOException {
+    public JpcapCaptor newCaptor() throws IOException {
         int timeout = 1000; // this has no effect given we use loopPacket
         return JpcapCaptor.openDevice(getNetworkInterface(), snaplen, promiscuous, timeout);
     }
