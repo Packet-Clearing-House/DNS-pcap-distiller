@@ -8,14 +8,12 @@ DNS pcap distiller (DPD) java application to grab DNS packets and write them to 
 
 * [Java 8](https://openjdk.java.net/install/)
 * [Jpcap](https://github.com/mgodave/Jpcap) (see notes below)
-* A server that can see the DNS packets you wish to capture
-* An interface named ``eth0``
 
 
 #### Jpcap
 This project depends on [Jpcap](https://github.com/mgodave/Jpcap) and its JNI library libjpcap. Refer to the Jpcap documentation for information on building the library for your system.
 
-Note for MacOS X users: I had to edit the JNI_INCLUDE2 variable in src/main/c/Makefile. The snippet below should work.
+Note for MacOS X users: You may need to edit the JNI_INCLUDE2 variable in src/main/c/Makefile. The snippet below should work.
 ```
 ifeq ($(PLATFORM), Darwin)
     JNI_INCLUDE2 = $(JAVA_DIR)/include/darwin 
@@ -25,29 +23,27 @@ ifeq ($(PLATFORM), Darwin)
 
 ### Installation 
 
-todo - remove branch from application.yml
-
 #### Via Compiling
 
 1. Install prerequisites per above
 1. Clone this repo ``git clone https://github.com/Packet-Clearing-House/DNS-pcap-distiller``
-1. Compile the ``.jar`` from the ``.java`` files in ``./src`` 
-1. Edit your config file ``./src/resources/application.yml``
-1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-VERSION_HERE.jar``
+1. Edit the config file ``src/main/resources/application.yml``
+1. Compile and generate the executable jar ``mvn package``
+1. Start DNS-pcap-distiller: ``java -jar target/dns-pcap-distiller-1.0.0.jar``
 
-#### Via downoading pre-compiled .jar
+Note that the maven build file assumes that the Jpcap repository has been cloned into a sibling directory. You will need to set the ``jpcap.dir`` property if this assumption does not hold.
+
+#### Via downloading pre-compiled .jar
 
 1. Install prerequisites per above
 1. Go to [the DPD website](https://pch.net/dpd) and download the latest version
 1. Download the config file [https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/master/src/main/resources/application.yml](from github) and edit it to your match your environment
-1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-VERSION_HERE.jar``
+1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-1.0.0.jar``
 
 
 ## Development
 
 We welcome pull requests! Please fork this repository, test your code locally, commit it and open a pull request.
-
-The maven build file assumes that the Jpcap repository has been cloned into a sibling directory. You will need to set the ``jpcap.dir`` property if this assumption does not hold.
 
 ### Ubuntu Dev Quick Start
 
@@ -77,6 +73,14 @@ If you need to see queries and responses in real time to debug, us this ``tcpdum
 
 ```
 tcpdump -l -nttttv -i any  port 53 and not dst 9.9.9.9 and not src 9.9.9.9
+```
+
+## Troubleshooting
+The application may throw an error when attempting to resolve the local host name. The following message can be ignored.
+```
+java.net.UnknownHostException: <hostname>: <hostname>: Name or service not known
+        at java.net.InetAddress.getLocalHost(...)
+        ...
 ```
 
 ## License
