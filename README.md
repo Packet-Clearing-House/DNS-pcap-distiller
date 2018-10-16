@@ -37,7 +37,7 @@ Note that the maven build file assumes that the Jpcap repository has been cloned
 
 1. Install prerequisites per above
 1. Go to [the DPD website](https://pch.net/dpd) and download the latest version
-1. Download the config file [https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/master/src/main/resources/application.yml](from github) and edit it to your match your environment
+1. Download the config file [from github](https://raw.githubusercontent.com/Packet-Clearing-House/DNS-pcap-distiller/master/src/main/resources/application.yml) and edit it to your match your environment
 1. Start DNS-pcap-distiller: ``java -jar dns-pcap-distiller-1.0.0.jar``
 
 Note - You will need to gzip and send these files to your [DNSAuth](https://github.com/Packet-Clearing-House/DNSAuth) instance.
