@@ -77,12 +77,24 @@ tcpdump -l -nttttv -i any  port 53 and not dst 9.9.9.9 and not src 9.9.9.9
 ```
 
 ## Troubleshooting
+
+### UnknownHostException
 The application may throw an error when attempting to resolve the local host name. The following message can be ignored.
 ```
 java.net.UnknownHostException: <hostname>: <hostname>: Name or service not known
         at java.net.InetAddress.getLocalHost(...)
         ...
 ```
+
+### StringIndexOutOfBoundsException
+If you see an error like:
+```
+Caused by: java.lang.StringIndexOutOfBoundsException: String index out of range: -1
+at java.lang.String.substring(String.java:1967) ~[na:1.8.0_181]
+at net.pch.dns.pcap.distiller.Application.run(Application.java:44) [classes!/:1.0.0]
+at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809) [spring-boot-2.0.5.RELEASE.jar!/:2.0.5.RELEASE]
+```
+Then ensure you're using FQDN format for hosts.  See [#2](https://github.com/Packet-Clearing-House/DNS-pcap-distiller/issues/2) for details
 
 ## License
 DNS-pcap-distiller is licensed under MIT.
